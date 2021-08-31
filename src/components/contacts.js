@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function Contacts() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneBook, setPhoneBook] = useState([]);
 
   const getPhoneBookStorage = () => {
     return JSON.parse(localStorage.getItem("phoneBook")) || [];
@@ -10,25 +12,34 @@ function Contacts() {
 
   const setPhoneBookStorage = (val) => {
     localStorage.setItem("phoneBook", JSON.stringify(val));
+    setPhoneBook(val);
   };
 
-  const handleSubmit = () => {
-    const phoneBook = getPhoneBookStorage();
-    if ((phone !== "") & (name !== "")) {
-      phoneBook.push({ phone, name, id: phoneBook.length });
-      setPhoneBookStorage(phoneBook);
+  const addContact = () => {
+    if ((phone.match(/\+7[0-9]{10,}/) !== null) & (name !== "")) {
+      const newContact = { phone, name, id: uuidv4() };
+      setPhoneBookStorage([newContact, ...phoneBook]);
     }
-    setName("");
-    setPhone("");
   };
 
-  const clearLocalStorage = () => {
-    localStorage.clear("phoneBook");
+  const clearPhoneBook = () => {
+    setPhoneBookStorage([]);
   };
+
+  useEffect(() => {
+    const phoneBook = getPhoneBookStorage();
+    setPhoneBook(phoneBook);
+  }, []);
 
   return (
     <div className="form-input">
-      <form className="form-name">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          addContact();
+        }}
+        className="form-name"
+      >
         ФИО:
         <input
           value={name}
@@ -47,14 +58,14 @@ function Contacts() {
           required
         />
         <small>Формат: +79999999999</small>
-        <input type="submit" value="Отправить" onClick={handleSubmit} />
+        <input type="submit" value="Отправить" />
       </form>
       <div className="form-contacts">
         <div className="form-contacts-wrap">
           <h2>Ваши контакты</h2>
-          <button onClick={clearLocalStorage}>Очистить список</button>
+          <button onClick={clearPhoneBook}>Очистить список</button>
         </div>
-        {getPhoneBookStorage().map((item) => (
+        {phoneBook.map((item) => (
           <div key={item.id}>
             <p className="form-contacts-name">ФИО: {item.name}</p>
             <p>Номер телефона: {item.phone}</p>
