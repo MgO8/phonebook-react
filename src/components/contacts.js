@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 function Contacts() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneBook, setPhoneBook] = useState([]);
+  const [search, setSearch] = useState("");
 
   const getPhoneBookStorage = () => {
     return JSON.parse(localStorage.getItem("phoneBook")) || [];
@@ -25,6 +26,17 @@ function Contacts() {
   const clearPhoneBook = () => {
     setPhoneBookStorage([]);
   };
+
+  const filteredBooks = useMemo(
+    () =>
+      phoneBook.filter((item) => {
+        return (
+          item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.phone.toLowerCase().includes(search.toLowerCase())
+        );
+      }),
+    [search, phoneBook]
+  );
 
   useEffect(() => {
     const phoneBook = getPhoneBookStorage();
@@ -63,14 +75,24 @@ function Contacts() {
       <div className="form-contacts">
         <div className="form-contacts-wrap">
           <h2>Ваши контакты</h2>
+          <input
+            type="text"
+            placeholder="Поиск по контактам"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <button onClick={clearPhoneBook}>Очистить список</button>
         </div>
-        {phoneBook.map((item) => (
-          <div key={item.id}>
-            <p className="form-contacts-name">ФИО: {item.name}</p>
-            <p>Номер телефона: {item.phone}</p>
-          </div>
-        ))}
+        {!filteredBooks.length ? (
+          <p>Ничего не найдено</p>
+        ) : (
+          filteredBooks.map((item) => (
+            <div key={item.id}>
+              <p className="form-contacts-name">ФИО: {item.name}</p>
+              <p>Номер телефона: {item.phone}</p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
