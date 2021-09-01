@@ -25,6 +25,12 @@ function PhoneBook() {
     }
   };
 
+  const updateContact = (id, name, phone) => {
+    const phoneBookIndex = phoneBook.findIndex((c) => c.id === id)
+    phoneBook.splice(phoneBookIndex, 1, { id, name, phone });
+    setPhoneBookStorage([...phoneBook])
+  }
+
   const clearPhoneBook = () => {
     setPhoneBookStorage([]);
   };
@@ -89,7 +95,7 @@ function PhoneBook() {
           <p>Ничего не найдено</p>
         ) : (
           filteredBooks.map(({ id, name, phone }) => (
-            <Contact id={id} name={name} phone={phone} />
+            <Contact key={id} id={id} name={name} phone={phone} updateContact={updateContact} />
           ))
         )}
       </div>

@@ -27,7 +27,9 @@
 
 .form-input {
   padding-top: 50px;
-  max-width: 400px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-name {
@@ -37,8 +39,27 @@
   justify-content: space-around;
   min-height: 200px;
   align-items: flex-start;
+  max-width: 400px;
 }
 
-.form-contacts-name {
-  word-wrap: break-word;
+.contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.contact-title {
+  margin-right: 10px;
+}
+
+.form-contacts-field {
+  outline: none;
+  border: none;
+  background-color: inherit;
+  font-size: 18px;
+}
+
+.form-contacts-field:active, :hover, :focus {
+  outline: 0;
+  outline-offset: 0;
 }
