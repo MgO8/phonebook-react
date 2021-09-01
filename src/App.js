@@ -1,6 +1,6 @@
 import "./App.css";
 
-import Contacts from "./components/contacts.js";
+import PhoneBook from "./components/PhoneBook.js";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
           <br />Телефон должен иметь указанный формат.
           <br /> Свой список вы можете просмотреть ниже!
         </p>
-        <Contacts />
+        <PhoneBook />
       </div>
     </div>
   );

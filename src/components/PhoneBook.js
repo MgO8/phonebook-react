@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-function Contacts() {
+import Contact from './Contact.js'
+
+function PhoneBook() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneBook, setPhoneBook] = useState([]);
@@ -81,16 +83,13 @@ function Contacts() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button onClick={clearPhoneBook}>Очистить список</button>
+          <button onClick={clearPhoneBook}>Очистить список контактов</button>
         </div>
         {!filteredBooks.length ? (
           <p>Ничего не найдено</p>
         ) : (
-          filteredBooks.map((item) => (
-            <div key={item.id}>
-              <p className="form-contacts-name">ФИО: {item.name}</p>
-              <p>Номер телефона: {item.phone}</p>
-            </div>
+          filteredBooks.map(({ id, name, phone }) => (
+            <Contact id={id} name={name} phone={phone} />
           ))
         )}
       </div>
@@ -98,4 +97,4 @@ function Contacts() {
   );
 }
 
-export default Contacts;
+export default PhoneBook;
