@@ -1,39 +1,21 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import Contact from './Contact.js'
+import Contact from "./Contact.js";
+
+const getPhoneBookStorage = () => {
+  return JSON.parse(localStorage.getItem("phoneBook")) || [];
+};
+
+const setPhoneBookStorage = (phoneBook) => {
+  localStorage.setItem("phoneBook", JSON.stringify(phoneBook));
+};
 
 function PhoneBook() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneBook, setPhoneBook] = useState([]);
   const [search, setSearch] = useState("");
-
-  const getPhoneBookStorage = () => {
-    return JSON.parse(localStorage.getItem("phoneBook")) || [];
-  };
-
-  const setPhoneBookStorage = (val) => {
-    localStorage.setItem("phoneBook", JSON.stringify(val));
-    setPhoneBook(val);
-  };
-
-  const addContact = () => {
-    if ((phone.match(/\+7[0-9]{10,}/) !== null) & (name !== "")) {
-      const newContact = { phone, name, id: uuidv4(), fav: false };
-      setPhoneBookStorage([newContact, ...phoneBook]);
-    }
-  };
-
-  const updateContact = (id, name, phone, fav) => {
-    const phoneBookIndex = phoneBook.findIndex((c) => c.id === id)
-    phoneBook.splice(phoneBookIndex, 1, { id, name, phone, fav });
-    setPhoneBookStorage([...phoneBook])
-  }
-
-  const clearPhoneBook = () => {
-    setPhoneBookStorage([]);
-  };
 
   const filteredBooks = useMemo(
     () =>
@@ -50,6 +32,27 @@ function PhoneBook() {
     const phoneBook = getPhoneBookStorage();
     setPhoneBook(phoneBook);
   }, []);
+
+  useEffect(() => {
+    setPhoneBookStorage(phoneBook);
+  }, [phoneBook]);
+
+  const addContact = () => {
+    if ((phone.match(/\+7[0-9]{10,}/) !== null) & (name !== "")) {
+      const newContact = { phone, name, id: uuidv4(), fav: false };
+      setPhoneBook([newContact, ...phoneBook]);
+    }
+  };
+
+  const updateContact = (id, name, phone, fav) => {
+    const phoneBookIndex = phoneBook.findIndex((c) => c.id === id);
+    phoneBook.splice(phoneBookIndex, 1, { id, name, phone, fav });
+    setPhoneBook([...phoneBook]);
+  };
+
+  const clearPhoneBook = () => {
+    setPhoneBook([]);
+  };
 
   return (
     <div className="form-input">
@@ -80,6 +83,7 @@ function PhoneBook() {
         <small>Формат: +79999999999</small>
         <input type="submit" value="Отправить" />
       </form>
+      {/* вынести в компонент */}
       <div className="form-contacts">
         <div className="form-contacts-wrap">
           <h2>Ваши контакты</h2>
@@ -91,11 +95,19 @@ function PhoneBook() {
           />
           <button onClick={clearPhoneBook}>Очистить список контактов</button>
         </div>
+        {/* вынести в компонент */}
         {!filteredBooks.length ? (
           <p>Ничего не найдено</p>
         ) : (
           filteredBooks.map(({ id, name, phone, fav }) => (
-            <Contact fav={fav} key={id} id={id} name={name} phone={phone} updateContact={updateContact} />
+            <Contact
+              fav={fav}
+              key={id}
+              id={id}
+              name={name}
+              phone={phone}
+              updateContact={updateContact}
+            />
           ))
         )}
       </div>

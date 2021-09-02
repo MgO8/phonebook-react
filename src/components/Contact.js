@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import edit from "./edit.svg";
-import done from "./done.svg";
+import Edit from "./edit.svg";
+import Done from "./done.svg";
 import { ReactComponent as Heart} from "./heart.svg";
 
 const red = "#FF0000";
@@ -43,7 +43,7 @@ function Contact({ id, name, phone, updateContact, fav }) {
         onChange={(e) => setPhone(e.currentTarget.value)}
       />
       <button onClick={handleEditClick}>
-        <img src={edit} alt={edit} />
+        <img src={Edit} alt={'Редактировать'} />
       </button>
       <button
         disabled={!disabled}
@@ -52,7 +52,7 @@ function Contact({ id, name, phone, updateContact, fav }) {
           setDisabled(!disabled);
         }}
       >
-        <img src={done} alt={done} width="25px" height="25px" />
+        <img src={Done} alt={"Сохранить"} width="25px" height="25px" />
       </button>
       <button  onClick={changeColor} className="heart">
         <Heart style={{fill: bgColor}} width="25px" height="25px" />
