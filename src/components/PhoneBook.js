@@ -20,14 +20,14 @@ function PhoneBook() {
 
   const addContact = () => {
     if ((phone.match(/\+7[0-9]{10,}/) !== null) & (name !== "")) {
-      const newContact = { phone, name, id: uuidv4() };
+      const newContact = { phone, name, id: uuidv4(), fav: false };
       setPhoneBookStorage([newContact, ...phoneBook]);
     }
   };
 
-  const updateContact = (id, name, phone) => {
+  const updateContact = (id, name, phone, fav) => {
     const phoneBookIndex = phoneBook.findIndex((c) => c.id === id)
-    phoneBook.splice(phoneBookIndex, 1, { id, name, phone });
+    phoneBook.splice(phoneBookIndex, 1, { id, name, phone, fav });
     setPhoneBookStorage([...phoneBook])
   }
 
@@ -94,8 +94,8 @@ function PhoneBook() {
         {!filteredBooks.length ? (
           <p>Ничего не найдено</p>
         ) : (
-          filteredBooks.map(({ id, name, phone }) => (
-            <Contact key={id} id={id} name={name} phone={phone} updateContact={updateContact} />
+          filteredBooks.map(({ id, name, phone, fav }) => (
+            <Contact fav={fav} key={id} id={id} name={name} phone={phone} updateContact={updateContact} />
           ))
         )}
       </div>
